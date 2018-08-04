@@ -328,3 +328,7 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/clientsideintegration/Crimson/Crimson.Portal/wwwroot/assets
+/clientsideintegration/Crimson/Crimson.Portal/wwwroot/js/application.js.map
+/clientsideintegration/Crimson/Crimson.Portal/wwwroot/js/application.js
+/clientsideintegration/Crimson/Crimson.Portal/wwwroot/css/application.css
