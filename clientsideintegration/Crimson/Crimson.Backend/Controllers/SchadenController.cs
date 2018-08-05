@@ -2,44 +2,63 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crimson.Backend.Models;
+using Crimson.Backend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crimson.Backend.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class SchadenController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        private readonly PartnerRepository _partnerRepository;
+        private readonly VertragRepository _vertragRepository;
+
+        public SchadenController(PartnerRepository partnerRepository, VertragRepository vertragRepository)
         {
-            return new string[] { "value1", "value2" };
+            _partnerRepository = partnerRepository;
+            _vertragRepository = vertragRepository;
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{sparte}/vorbelegung")]
+        public IActionResult GetVorbelegung(string sparte, [FromQuery]int partnerId, [FromQuery]int vsnr)
         {
-            return "value";
+            if (sparte.ToLower() != "kraftfahrt")
+                return BadRequest("sparte is invalid");
+            if (partnerId < 1)
+                return BadRequest("bad request, partnerId should be set");
+            if (vsnr < 1)
+                return BadRequest("bad request, vsnr should be set");
+
+
+            var partner = _partnerRepository.GetById(partnerId);
+            if (partner == null)
+                return NotFound();
+
+            var vertrag = _vertragRepository.GetByVsnr(vsnr);
+            if (vertrag == null)
+                return NotFound();
+
+            var result = new
+            {
+                Vsnr = vertrag.Vsnr,
+                Anschrift = partner.Anschrift
+            };
+            return Ok(result);
         }
 
-        // POST api/values
         [HttpPost]
-        public void Post([FromBody] string value)
+        public IActionResult Post([FromBody] Angebot model)
         {
+            //if (model == null)
+            //    return BadRequest("Body should not be empty");
+            //if (model.PartnerId < 1)
+            //    return BadRequest("partnerId is not set");
+
+            //_angebotRepository.Create(model);
+            return Created($"/angebot/{model.AngebotId}", model);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
     }
 }

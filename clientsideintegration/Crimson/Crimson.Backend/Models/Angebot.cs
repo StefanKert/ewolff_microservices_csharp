@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Crimson.Backend.Models
 {
-
     public class Angebot
     {
         public int AngebotId { get; set; }

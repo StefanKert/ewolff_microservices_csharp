@@ -9,18 +9,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Crimson.Backend.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
     public class AngebotController : ControllerBase
     {
         private readonly AngebotRepository _angebotRepository;
+        private readonly PartnerRepository _partnerRepository;
 
-        public AngebotController(AngebotRepository angeboteRepository)
+        public AngebotController(AngebotRepository angeboteRepository, PartnerRepository partnerRepository)
         {
             this._angebotRepository = angeboteRepository;
+            this._partnerRepository = partnerRepository;
         }
 
-        [HttpGet]
+        [HttpGet("angebote")]
         public IActionResult Get([FromQuery]int partnerId, [FromQuery]string mode = "list")
         {
             var angebote = _angebotRepository.Get(x => x.PartnerId == partnerId).Select(p => new
@@ -44,7 +45,7 @@ namespace Crimson.Backend.Controllers
                 return Ok(angebote.Count());
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("angebote/{id:int}")]
         public ActionResult<Angebot> Get(int id)
         {
             var angebot = _angebotRepository.GetById(id);
@@ -53,73 +54,38 @@ namespace Crimson.Backend.Controllers
             return Ok(angebot);
         }
 
-        [HttpPost]
-        public IActionResult Post([FromBody] Angebot model)
-        {
-            if (model == null)
-                return BadRequest("Body should not be empty");
-            if(model.PartnerId < 1)
-                return BadRequest("partnerId is not set");
-
-            _angebotRepository.Create(model);
-            return Created($"/angebot/{model.AngebotId}", model);
-        }
-
-        [HttpPost("{id:int}")]
-        public IActionResult Copy(int id)
-        {
-            if (id > 1)
-            {
-                return BadRequest("angebotId should be an integer");
-            }
-
-            var angebot = _angebotRepository.GetById(id);
-            if (angebot == null)
-                return NotFound();
-
-            angebot.AngebotId = -1; // Reset angebotId
-            _angebotRepository.Create(angebot);
-            return Created($"/angebot/{angebot.AngebotId}", angebot);
-        }
-
-        [HttpGet("{sparte}/vorbelegung")]
+        [HttpGet("angebot/{sparte}/vorbelegung")]
         public IActionResult GetVorbelegung(string sparte, [FromQuery]int partnerId)
         {
             if (sparte.ToLower() != "kraftfahrt")
-            {
                 return BadRequest("sparte is invalid");
-            }
+            if (partnerId < 1)
+                return BadRequest("bad request, partnerId should be set");
 
-            /**
-             *       let partner = partnerRepository.find(p => p.partnerId === id);
-
-           if (!partner) {
-               res.status(404).send('partner not found');
-               return next();
-           }
-
-              
-
-        const result = {
-            geburtsdatum: partner.geburtsdatum,
-            anschrift: partner.anschrift,
-            zahlungsweise: [
-                {
-                    id: 1,
-                    name: 'monatlich'
-                },
-                {
-                    id: 2,
-                    name: 'jährlich'
+            var partner = _partnerRepository.GetById(partnerId);
+            if (partner == null)
+                return NotFound();
+            var result = new
+            {
+                Geburtsdatum = partner.Geburtsdatum,
+                Anschrift = partner.Anschrift,
+                Zahlungsweise = new List<Zahlungsweise> {
+                    new Zahlungsweise
+                    {
+                        Id = 1,
+                        Name = "monatlich"
+                    },
+                    new Zahlungsweise
+                    {
+                        Id = 2,
+                        Name = "jährlich"
+                    }
                 }
-            ]
-        };
-             * **/
-
-            return Ok();
+            };
+            return Ok(result);
         }
 
-        [HttpPost("{sparte}/berechnen")]
+        [HttpPost("angebot/{sparte}/berechnen")]
         public IActionResult Calculate(string sparte, [FromBody] Angebot model)
         {
             if (sparte.ToLower() != "kraftfahrt")
@@ -153,7 +119,7 @@ namespace Crimson.Backend.Controllers
             PropertyInfo property = null;
             do
             {
-                property = properties[(int) Math.Floor(new Random().NextDouble() * properties.Length)];
+                property = properties[(int)Math.Floor(new Random().NextDouble() * properties.Length)];
             }
             while (property.Name.ToLower().Contains("id") || property.Name.ToLower().Contains("uri"));
 
@@ -175,6 +141,35 @@ namespace Crimson.Backend.Controllers
                 FehlerText = "Bitte denken Sie sich Ihre eigene Fehlermeldung aus.",
                 BezugsFeld = bezugsFeld
             };
+        }
+
+        [HttpPost("angebot")]
+        public IActionResult Post([FromBody] Angebot model)
+        {
+            if (model == null)
+                return BadRequest("Body should not be empty");
+            if (model.PartnerId < 1)
+                return BadRequest("partnerId is not set");
+
+            _angebotRepository.Create(model);
+            return Created($"/angebot/{model.AngebotId}", model);
+        }
+
+        [HttpPost("angebot/{id:int}")]
+        public IActionResult Copy(int id)
+        {
+            if (id > 1)
+            {
+                return BadRequest("angebotId should be an integer");
+            }
+
+            var angebot = _angebotRepository.GetById(id);
+            if (angebot == null)
+                return NotFound();
+
+            angebot.AngebotId = -1; // Reset angebotId
+            _angebotRepository.Create(angebot);
+            return Created($"/angebot/{angebot.AngebotId}", angebot);
         }
     }
 }
