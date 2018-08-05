@@ -1,4 +1,5 @@
 ﻿using Crimson.Backend.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,11 @@ namespace Crimson.Backend.Repositories
     public class KontakthistorieRepository
     {
         private static List<Kontakthistorie> _data;
-        private readonly string _serverUrl;
 
-        public KontakthistorieRepository(string serverUrl)
+        public KontakthistorieRepository()
         {
             if (_data == null)
                 GenerateData();
-            this._serverUrl = serverUrl;
         }
 
         private void GenerateData()

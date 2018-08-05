@@ -1,4 +1,5 @@
 ﻿using Crimson.Backend.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Crimson.Backend.Repositories
     public class VertragRepository
     {
         private static List<Vertrag> _data;
-        private readonly string _serverUrl;
+        private readonly AppOptions _options;
 
-        public VertragRepository(string serverUrl)
+        public VertragRepository(IOptions<AppOptions> optionsAccessor)
         {
             if (_data == null)
                 GenerateData();
-            _serverUrl = serverUrl;
+            _options = optionsAccessor.Value;
         }
 
         private void GenerateData()
@@ -31,7 +32,7 @@ namespace Crimson.Backend.Repositories
                     Sparte = "Kraftfahrt",
                     PartnerId = 4711 + (currentId++ % 15),
                     BeitragZent = (int)Math.Floor(new Random().NextDouble() * 40000 + 2000),
-                    VertragURI = $"{_serverUrl}/vertrag/{vsnr}",
+                    VertragURI = $"{_options.ServerUrl}/vertrag/{vsnr}",
                     Fahrzeugdaten = new Fahrzeugdaten
                     {
                         Fahrzeugart = "PKW",

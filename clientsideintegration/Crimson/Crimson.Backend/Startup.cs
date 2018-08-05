@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crimson.Backend.Models;
 using Crimson.Backend.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,13 +27,22 @@ namespace Crimson.Backend
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var httpEndpoint = Configuration["Kestrel:Endpoints:Http:Url"];
-            var httpsEndpoint = Configuration["Kestrel:Endpoints:Https:Url"];
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddSingleton<AngebotRepository>(new AngebotRepository(httpEndpoint));
-            services.AddSingleton(new AntragRepository());
+            services.AddOptions<AppOptions>();
+            services.Configure<AppOptions>(options =>
+            {
+                options.ServerUrl = Configuration["urls"];
+            });
+
+            services.AddTransient<AngebotRepository>();
+            services.AddTransient<AntragRepository>();
+            services.AddTransient<BerufRepository>();
+            services.AddTransient<BriefkastenRepository>();
+            services.AddTransient<HaushaltRepository>();
+            services.AddTransient<KontakthistorieRepository>();
+            services.AddTransient<PartnerRepository>();
+            services.AddTransient<VertragRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
 ﻿using Crimson.Backend.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,13 @@ namespace Crimson.Backend.Repositories
     public class AngebotRepository
     {
         private static List<Angebot> _data;
-        private readonly string _serverUrl;
+        private readonly AppOptions _options;
 
-        public AngebotRepository(string serverUrl)
+        public AngebotRepository(IOptions<AppOptions> optionsAccessor)
         {
             if (_data == null)
                 GenerateData();
-            _serverUrl = serverUrl;
+            _options = optionsAccessor.Value;
         }
 
         private void GenerateData()
@@ -29,7 +30,7 @@ namespace Crimson.Backend.Repositories
                 {
                     AngebotId = angebotId,
                     PartnerId = 4711 + (currentId % 15),
-                    AngebotURI = $"{_serverUrl}/angebot/{angebotId}",
+                    AngebotURI = $"{_options.ServerUrl}/angebot/{angebotId}",
                     Sparte = "Kraftfahrt",
                     Rolle = "Versicherungsnehmer",
                     Agentur = "2008/21",
@@ -84,7 +85,7 @@ namespace Crimson.Backend.Repositories
         public void Create(Angebot angebot)
         {
             angebot.AngebotId = _data.Count + 1;
-            angebot.AngebotURI = $"{_serverUrl}/angebot/{angebot.AngebotId}";
+            angebot.AngebotURI = $"{_options.ServerUrl}/angebot/{angebot.AngebotId}";
             _data.Add(angebot);
         }
     }
