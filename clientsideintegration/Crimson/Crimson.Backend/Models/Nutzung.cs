@@ -7,7 +7,7 @@
         public int FahrleistungKm { get; set; }
         public int Kilometerstand { get; set; }
         public bool AbweichenderFahrzeughalter { get; set; }
-        public string nutzung { get; set; }
+        public string Nutzungsbereich { get; set; }
         public bool SelbstGenEigentum { get; set; }
         public string Wohneigentumart { get; set; }
     }

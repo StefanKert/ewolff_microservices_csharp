@@ -32,7 +32,8 @@ namespace Crimson.Backend
             services.AddOptions<AppOptions>();
             services.Configure<AppOptions>(options =>
             {
-                options.ServerUrl = Configuration["urls"];
+                var urls = Configuration["urls"].Split(";");            
+                options.ServerUrl = urls.FirstOrDefault(x => x.StartsWith("http://"));
             });
 
             services.AddTransient<AngebotRepository>();

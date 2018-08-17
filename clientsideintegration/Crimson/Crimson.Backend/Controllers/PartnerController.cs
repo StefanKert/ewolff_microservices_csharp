@@ -50,14 +50,14 @@ namespace Crimson.Backend.Controllers
         }
 
         [HttpGet("{id:int}/haushalt")]
-        public ActionResult<Partner> GetHaushalt(int id)
+        public ActionResult<IEnumerable<Haushalt>> GetHaushalt(int id)
         {
             var result = _haushaltRepository.Get(x => x.PartnerId == id);
             return Ok(result);
         }
 
 
-        [HttpGet("{id:int}/haushalt")]
+        [HttpGet("{id:int}/kontakt")]
         public ActionResult<Partner> GetKontakte(int id)
         {
             var result = _kontakthistorieRepository.Get(x => x.PartnerId == id);

@@ -14,9 +14,9 @@ namespace Crimson.Backend.Repositories
 
         public AngebotRepository(IOptions<AppOptions> optionsAccessor)
         {
+            _options = optionsAccessor.Value;
             if (_data == null)
                 GenerateData();
-            _options = optionsAccessor.Value;
         }
 
         private void GenerateData()
@@ -59,7 +59,7 @@ namespace Crimson.Backend.Repositories
                         FahrleistungKm = 30000,
                         Kilometerstand = 120433,
                         AbweichenderFahrzeughalter = false,
-                        nutzung = "privat",
+                        Nutzungsbereich = "privat",
                         SelbstGenEigentum = true,
                         Wohneigentumart = "Wohnung"
 
@@ -72,7 +72,6 @@ namespace Crimson.Backend.Repositories
                         Rahmenvertrag = "keiner",
                         VersBeginn = "25.02.2016",
                         Zahlungsweise = "monatlich"
-
                     }
                 });
             }

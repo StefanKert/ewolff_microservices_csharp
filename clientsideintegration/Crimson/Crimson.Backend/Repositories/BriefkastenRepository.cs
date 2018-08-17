@@ -14,9 +14,9 @@ namespace Crimson.Backend.Repositories
 
         public BriefkastenRepository(IOptions<AppOptions> optionsAccessor)
         {
+            _options = optionsAccessor.Value;
             if (_data == null)
                 GenerateData();
-            _options = optionsAccessor.Value;
         }
 
         private void GenerateData()
