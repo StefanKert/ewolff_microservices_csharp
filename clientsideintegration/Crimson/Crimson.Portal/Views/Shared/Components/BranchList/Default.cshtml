@@ -1,0 +1,26 @@
+﻿@model  BranchListViewModel
+
+<div class="branch-selector-fullwidth-wrapper">
+    <div class="container accordion">
+        <div class="branch-selector-toggle accordion-title">
+            <button type="button" class="branch-selector-toggle-button">
+                Spartenauswahl
+            </button>
+        </div>
+        <ul class="branch-selector">
+            @foreach (var branch in Model.Branches)
+            {
+            <li class="branch-selector-item">
+                <a href="@Model.Partner.Links.Self/branches/@branch.ClassName" data-pjax="active" class="branch-selector-item-link">
+                    <i class="branch-selector-item-icon @branch.ClassName"></i>
+                    <span class="branch-selector-item-caption">@branch.Label</span>
+                    @if (branch.NumberOfContracts > 0)
+                    {
+                        <span class="branch-selector-item-indicator label label-default">@branch.NumberOfContracts</span>
+                    }
+                </a>
+            </li>
+            }
+        </ul>
+    </div>
+</div>

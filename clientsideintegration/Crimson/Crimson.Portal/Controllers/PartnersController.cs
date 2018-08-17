@@ -2,46 +2,45 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Crimson.Portal.Data;
+using Crimson.Portal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crimson.Portal.Controllers
 {
+    [Route("[controller]")]
     public class PartnersController : Controller
     {
-        public IActionResult Index(int id)
+        private readonly CrimsonBackendClient _client;
+
+        public PartnersController(CrimsonBackendClient client)
         {
-            return View();
+            this._client = client;
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> Index(int id)
+        {
+            var housHolds = await _client.GetHousholdsAsync(id);
+            var contracts = await _client.GetContractsAsync(id);
+            var partner = await _client.GetPartnerAsync(id);
+            var proposals = await _client.GetProposalsAsync(id);
+            var offers = await _client.GetOffersAsync(id);
+            var contacts = await _client.GetContactsAsync(id);
+
+            var viewModel = new PartnerOverviewViewModel();
+            viewModel.Title = $"{partner.Firstname} {partner.Name} - Deckblatt";
+            viewModel.Branches = _client.GetBranches(contracts);
+            viewModel.Housholds = housHolds;
+            viewModel.Contracts = contracts;
+            viewModel.Partner = partner;
+            viewModel.Contacts = contacts;
+            viewModel.Proposals = proposals;
+            viewModel.Offers = offers;
+
+            ViewBag.Partner = partner;
+            ViewBag.PartnerId = id;
+            return View(viewModel);
         }
     }
-
-
-    /**
-     * 
-     * exports.get = (req, res) => {
-  Promise.all([
-    backend.household(req.params.id),
-    backend.contracts(req.params.id),
-    backend.partner(req.params.id),
-    backend.contacts(req.params.id),
-    backend.proposals(req.params.id),
-    backend.offers(req.params.id)
-  ]).then((result) => {
-    let enrichedPartner = enrichPartner(result[2])
-
-    res.render('partners', {
-      title: `${enrichedPartner.firstName} ${enrichedPartner.name} - Deckblatt`,
-      branches: enrichBranches(branches, result[1]),
-      household: enrichHousehold(result[0]),
-      contracts: enrichContracts(result[1]),
-      partner: enrichedPartner,
-      contacts: enrichContacts(result[3]),
-      proposals: enrichProposals(result[4]),
-      offers: enrichOffers(result[5])
-    })
-  }, (err) => {
-    // TODO: Add an error page template
-    res.send(`An error occurred: ${err}`)
-  })
-}
-     * **/
 }

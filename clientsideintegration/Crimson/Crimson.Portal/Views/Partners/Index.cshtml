@@ -1,0 +1,90 @@
+﻿@model PartnerOverviewViewModel
+
+<div class="container">
+    <header class="page-header">
+        <h1>Kundendeckblatt</h1>
+    </header>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="contact-history">
+                <div class="listing-header">
+                    <h2>Kontakthistorie</h2>
+                </div>
+                <ol class="contact-history-entries">
+                    @foreach (var contact in Model.Contacts)
+                    {
+                        <li>
+                            <div class="entry">
+                                <span class="contact-history-entry-type"><i data-toggle="tooltip" title="" class="@contact.Icon" data-original-title="Termin"></i>&nbsp;@contact.Type</span>
+                                <time class="contact-history-entry-date" datetime="@contact.Date">@contact.FormattedDate</time>
+                                @if (!string.IsNullOrWhiteSpace(contact.Advisor))
+                                {
+                                    <span class="contact-history-entry-clerk">@contact.Advisor</span>
+                                }
+                                <p class="contact-history-entry-subject">@contact.Title
+                            </div>
+                        </li>
+                    }
+                </ol>
+                <div class="contact-history-more-entries">
+                    <a href="#">Weitere anzeigen</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="listing-header">
+                <h2>Netzwerk</h2>
+            </div>
+
+            <ul class="contact-network">
+                @foreach (var houshold in Model.Housholds)
+                {
+                    <li>
+                        <a href="#" class="h-card">@houshold.Name</a>
+                        <span class="contact-role">
+                            <span class="contact-role-name">@houshold.Relationship</span>
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="listing-header">
+                <h2>Bestand</h2>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="partner-portfolio">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li><a href="#contracts" class="kbd" role="tab" data-toggle="tab">Verträge (@Model.Contracts.Count())</a></li>
+                            <li><a href="#proposals" class="kbd" role="tab" data-toggle="tab">Anträge (@Model.Proposals.Count())</a></li>
+                            <li><a href="#offers" class="kbd" role="tab" data-toggle="tab">Angebote (@Model.Offers.Count()})</a></li>
+                        </ul>
+
+                        <div>
+                            <div id="contracts" class="tab-pane">
+                                {{> contracts }}
+                            </div>
+
+                            <div id="proposals" class="tab-pane">
+                                {{> proposals }}
+                            </div>
+
+                            <div id="offers" class="tab-pane">
+                                {{> offers }}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

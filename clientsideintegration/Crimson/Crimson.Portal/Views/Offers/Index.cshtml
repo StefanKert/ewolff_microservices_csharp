@@ -1,0 +1,66 @@
+﻿@model OffersOverviewViewModel
+
+<div class="container">
+    <header class="listing-header">
+        <h2>Angebote</h2>
+    </header>
+
+    <div class="table-responsive">
+        <table class="portfolio-overview table">
+            <thead>
+                <tr>
+                    <th class="sort" data-sort="col-portfolio-id">#</th>
+                    <th class="sort" data-sort="col-portfolio-status">Status</th>
+                    @if (!Model.IsEmbedded)
+                    {
+                        <th class="sort" data-sort="col-portfolio-role">Beteiligung</th>
+                        <th class="sort" data-sort="col-portfolio-id">Versicherungsschein</th>
+                        <th class="sort" data-sort="col-portfolio-agency">Agentur</th>
+                        <th class="sort" data-sort="col-portfolio-branch">Sparte</th>
+                        <th class="sort" data-sort="col-portfolio-incident">Bezug</th>
+                        <th class="sort" data-sort="col-portfolio-claims">Schäden</th>
+                        <th class="sort" data-sort="col-portfolio-expiry">Ablauf</th>
+                        <th class="sort" data-sort="col-portfolio-payment-interval">Turnus</th>
+                    }
+                    <th class="sort text-right" data-sort="col-portfolio-payment-amount">Beitrag</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var offer in Model.Offers)
+                {
+                    <tr>
+                        <td class="col-portfolio-id">
+                            <a href="@offer.OfferUri" data-pjax="active">@offer.Id</a>
+                        </td>
+                        <td class="col-portfolio-status">
+                            <i title="" data-original-title="" class="icon-circle-line active" data-toggle="popover" data-content="Storniert" data-placement="top"></i>
+                            <!-- <span class="col&#45;portfolio&#45;status&#45;label">Storniert</span> -->
+                        </td>
+                        @if (!Model.IsEmbedded)
+                        {
+                            <td class="col-portfolio-role">@offer.Role</td>
+                            <td class="col-portfolio-id"></td>
+                            <td class="col-portfolio-agency">@offer.Agency</td>
+                            <td class="col-portfolio-branch">
+                                <i class="@offer.Icon"></i>
+                                <span class="branch-selector-item-caption">@offer.Branch</span>
+                            </td>
+                            <td class="col-portfolio-incident">@offer.Incident</td>
+                            <td class="col-portfolio-claims">@offer.Claims</td>
+                            <td class="col-portfolio-expiry">@offer.Expire</td>
+                            <td class="col-portfolio-payment-interval">
+                                <span>@offer.PaymentInterval</span>
+                            </td>
+                        }
+                        <td class="col-portfolio-payment-amount text-right">@offer.FormattedFee</td>
+                        <td>
+                            <a href="@offer.OfferUri" class="btn btn-default btn-xs" data-pjax="active">Öffnen</a>
+                            <a href="@offer.OfferUri" class="btn btn-default btn-xs" target="_blank">In neuem Tab öffnen</a>
+                        </td>
+                    </tr>
+                }
+                    </tbody>
+                </table>
+            </div>
+        </div>

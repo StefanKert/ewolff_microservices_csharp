@@ -10,12 +10,12 @@
 <body>
     <partial name="_NavigationPartial" />
 
-    @if (ViewBag.Partner ?? false)
+    @if (ViewBag.Partner != null)
     {
-        <div data-position="sticky">
-            <partial name="_CustomerCardPartial" />
-            <partial name="_BranchesPartial" />
-        </div>
+    <div data-position="sticky">
+        <partial name="_CustomerCardPartial" model="ViewBag.Partner" />
+        <vc:branch-list partner-id="@ViewBag.PartnerId" />
+    </div>
     }
 
     <partial name="_CookieConsentPartial" />

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Crimson.Portal.Data;
+using Crimson.Portal.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,28 +10,21 @@ namespace Crimson.Portal.Controllers
 {
     public class ResultController : Controller
     {
-        public IActionResult Index()
+        private readonly CrimsonBackendClient _client;
+
+        public ResultController(CrimsonBackendClient client)
         {
-            return View();
+            this._client = client;
         }
 
-
-        /**
-        const backend = require('../backend')
-const enrichPartners = require('../enricher').enrichPartners
-
-exports.get = (req, res) => {
-  let query = req.query['query']
-  backend.findPartner(query).then((result) => {
-    res.render('search_results', {
-      results: enrichPartners(result),
-      query: query
-    })
-  }, (err) => {
-    // TODO: Add an error page template
-    res.send(`An error occurred: ${err}`)
-  })
-}**/
+        public async Task<IActionResult> Index([FromQuery]string query)
+        {
+            var foundPartners = await _client.FindPartnerAsync(query);
+            return View(new ResultViewModel {
+                Query = query,
+                FoundPartners = foundPartners
+            });
+        }
     }
 }
  

@@ -1,10 +1,12 @@
-﻿<div class="customer-card-wrapper">
+﻿@model  Partner
+
+<div class="customer-card-wrapper">
     <div class="container">
         <article data-accordion="active" class="customer-card h-card accordion">
             <div class="accordion-title">
                 <div class="customer-card-name">
-                    <a href="{{ partner._links.self.href }}" class="customer-card-name-link" data-pjax="active">
-                        <span class="p-name">{{ partner.honorific }} {{ partner.firstName }} {{ partner.name }}</span>
+                    <a href="@Model.Links.Self" class="customer-card-name-link" data-pjax="active">
+                        <span class="p-name">@Model.Honorific @Model.Firstname @Model.Name</span>
                     </a>
                     <span class="customer-card-flags">
                         <a href="#" class="customer-card-flag" data-toggle="popover" data-placement="bottom" data-content="Es liegt noch keine Einverständniserklärung für den Kontakt per Telefon und E-Mail zur Akquise vor.">AQ</a>
@@ -12,7 +14,37 @@
                         <a href="#" class="customer-card-flag" data-toggle="popover" data-placement="bottom" data-content="Der Kunde ist Nutzer des Onlineservices Crimson.">WEB</a>
                     </span>
                 </div>
-                {{>portfolio_shelf}}
+                <ul class="customer-card-portfolio">
+                    <li class="customer-card-portfolio-item">
+                        <a href="@Model.Links.Offers" class="customer-card-portfolio-item-link preview" data-preview="enabled" data-preview-title="Angebote" data-preview-selector="table.portfolio-overview" data-preview-error-msg="Angebote nicht abrufbar!" data-preview-window>
+                            Angebote <span class="customer-card-portfolio-item-quantity"></span>
+                        </a>
+                    </li>
+                    <li class="customer-card-portfolio-item">
+                        <a href="@Model.Links.Proposals" class="customer-card-portfolio-item-link preview" data-preview="enabled" data-preview-title="Anträge" data-preview-selector="table.portfolio-overview" data-preview-error-msg="Anträge nicht abrufbar!" data-preview-window>
+                            Anträge <span class="customer-card-portfolio-item-quantity"></span>
+                        </a>
+                    </li>
+                    <li class="customer-card-portfolio-item">
+                        <a href="@Model.Links.Contracts" class="customer-card-portfolio-item-link preview" data-preview="enabled" data-preview-title="Verträge" data-preview-selector="table.portfolio-overview" data-preview-error-msg="Verträge nicht abrufbar!" data-preview-window>
+                            Verträge <span class="customer-card-portfolio-item-quantity"></span>
+                        </a>
+                    </li>
+                    <li class="customer-card-portfolio-item">
+                        <a href="#" class="customer-card-portfolio-item-link collection-preview"
+                           data-popover-content="#portfolio-item-popover-claims">
+                            Schäden <span class="customer-card-portfolio-item-quantity"></span>
+                        </a>
+                    </li>
+                </ul>
+
+                <div class="collection-excerpt" id="portfolio-item-popover-claims">
+                    <h3 class="collection-excerpt-title">
+                        Schnellansicht
+                        <a href="#" class="collection-link">Alle anzeigen</a>
+                    </h3>
+                    <p>N/A</p>
+                </div>
                 <div class="customer-card-drawer dropdown">
                     <button class="customer-card-drawer-btn dropdown-toggle" type="button" id="customer-card-drawer-btn-id" data-toggle="dropdown" data-bubble="4">
                         <i class="icon-id-2-filled"></i>
@@ -31,20 +63,20 @@
             </div>
             <div class="customer-card-details">
                 <div class="customer-card-contact">
-                    <p class="p-street-address">{{ partner.address.street }}</p>
+                    <p class="p-street-address">@Model.Address.Street</p>
                     <p>
-                        <span class="p-postal-code">{{ partner.address.postcode }}</span>
-                        <span class="p-locality">{{ partner.address.city }}</span>
+                        <span class="p-postal-code">@Model.Address.PostCode</span>
+                        <span class="p-locality">@Model.Address.City</span>
                     </p>
-                    <a href="tel:{{ partner.telnummer }}">
+                    <a href="tel:@Model.Phone">
                         <i class="navbar-icon icon-call-1-filled"></i>
-                        <span class="p-tel">{{ partner.phone }}</span>
+                        <span class="p-tel">@Model.Phone</span>
                     </a>
                 </div>
                 <div class="customer-card-misc">
-                    <p>{{ partner.age }} Jahre, geb. am <span class="dt-bday">{{ partner.dob }}</span></p>
-                    <p>{{ partner.personalStatus }}, {{ partner.childrenCount }}</p>
-                    <p class="p-job-title">{{ partner.job }}</p>
+                    <p>@Model.Age Jahre, geb. am <span class="dt-bday">@Model.DateOfBirth</span></p>
+                    <p>@Model.PersonalStatus, @Model.ChildrenCount</p>
+                    <p class="p-job-title">@Model.Job</p>
                 </div>
             </div>
         </article>
